@@ -9,7 +9,7 @@ SPEED = 50
 SPACE_SIZE = 50
 BODY_PARTS = 3
 SNAKE_COLOR = "#FFFFFF"
-FOOD_COLOR = "#FFFFFF"
+FOOD_COLOR = "#EE3344"
 BACKGROUND_COLOR = "#000000"
 
 class Snake:
@@ -26,7 +26,6 @@ class Snake:
         for x, y in self.coordinates:
             square = canvas.create_rectangle(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=SNAKE_COLOR, tag="snake")
             self.squares.append(square)
-
 class Food:
     def __init__(self):
         # Generates a random number between 0 and total number of spaces available from our resolution and space size
@@ -35,7 +34,7 @@ class Food:
         
         self.coordinates = [x, y]
         
-        canvas.create_rectangle(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=FOOD_COLOR, tag="food")
+        canvas.create_oval(x, y, x + SPACE_SIZE, y + SPACE_SIZE, fill=FOOD_COLOR, tag="food")
 
 def next_turn(snake, food):
     x, y = snake.coordinates[0]
@@ -79,8 +78,6 @@ def next_turn(snake, food):
          # Loop for refreshing the window
         window.after(SPEED, next_turn, snake, food)
     
-    
-
 def change_direction(new_direction):
     global direction
     
