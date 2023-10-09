@@ -12,6 +12,8 @@ SNAKE_COLOR = "#FFFFFF"
 FOOD_COLOR = "#EE3344"
 BACKGROUND_COLOR = "#000000"
 
+game_running = False
+
 class Snake:
     def __init__(self):
         self.body_size = BODY_PARTS
@@ -73,7 +75,7 @@ def next_turn(snake, food):
         del snake.squares[-1]
         
     if check_collisions(snake):
-        game_over()
+        game_over(snake, food)
     else:
          # Loop for refreshing the window
         window.after(SPEED, next_turn, snake, food)
@@ -108,10 +110,30 @@ def check_collisions(snake):
             return True
     
     return False
-
-def game_over():
-    canvas.delete(ALL)
     
+def start_game(snake, food):
+    global game_running
+    game_running = True
+    print("game running", game_running)
+    
+    next_turn(snake, food)
+
+def restart_game(snake, food):
+    if game_running == False:
+        canvas.delete(ALL)
+                
+        snake = Snake()
+        food = Food()        
+        start_game(snake, food)
+
+def game_over(snake, food):
+    global game_running
+    game_running = False
+    print("game running", game_running)
+
+    del snake
+    del food
+    canvas.delete(ALL)
     canvas.create_text(canvas.winfo_width() / 2, canvas.winfo_height() / 2, font=('consolas', 70), text="GAME OVER", fill="white", tag="game_over")
 
 # Creating a window using tkinter
@@ -148,11 +170,10 @@ window.bind("<Left>", lambda event: change_direction('left'))
 window.bind("<Right>", lambda event: change_direction('right'))
 window.bind("<Up>", lambda event: change_direction('up'))
 window.bind("<Down>", lambda event: change_direction('down'))
+window.bind("<space>", lambda event: restart_game(snake, food))
 
-# Creating snake and food object and calling their constructors
 snake = Snake()
 food = Food()
-
-next_turn(snake, food)
+start_game(snake, food)
 
 window.mainloop()
